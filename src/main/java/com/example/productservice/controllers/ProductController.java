@@ -1,6 +1,11 @@
 package com.example.productservice.controllers;
 
+import com.example.productservice.exceptions.InvalidIdException;
 import com.example.productservice.models.Product;
+import com.example.productservice.services.ProductService;
+import org.apache.coyote.Response;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -8,13 +13,23 @@ import java.util.List;
 @RestController
 @RequestMapping("/products")
 public class ProductController {
-    @GetMapping("/{id}")
-    public Product getProductById(@PathVariable("id") int id) {
-        return null;
+    private ProductService productService;
+
+    ProductController(ProductService productService) {
+        this.productService = productService;
     }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Product> getProductById(@PathVariable("id") int id) throws InvalidIdException {
+        Product product = productService.getProductById(id);
+
+        return new ResponseEntity<>(product, HttpStatusCode.valueOf(200));
+//        return new Product();
+    }
+
     @GetMapping("/")
     public List<Product> getAllProducts() {
-        return null;
+        return productService.getAllProducts();
     }
 
     @PostMapping("/")
@@ -23,7 +38,7 @@ public class ProductController {
     }
 
     @PatchMapping("/{id}")
-    public Product updateProduct(@PathVariable("id") Long id,@RequestBody Product product) {
+    public Product updateProduct(@PathVariable("id") Long id, @RequestBody Product product) {
         return null;
     }
 
