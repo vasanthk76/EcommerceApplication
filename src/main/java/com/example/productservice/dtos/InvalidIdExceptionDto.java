@@ -6,4 +6,5 @@ import lombok.Data;
 public class InvalidIdExceptionDto {
     private String message;
     private String detail;
+    private Long id;
 }

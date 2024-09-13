@@ -17,7 +17,7 @@ public class ExceptionHandlerAdvice {
     public ResponseEntity<ArithmaticExceptionDto> handleArithmaticException() {
         ArithmaticExceptionDto dto = new ArithmaticExceptionDto();
         dto.setMessage("Arithmetic Exception");
-        dto.setDetail("you F'd up");
+        dto.setDetail("Arithmetic Exception detail");
         return new ResponseEntity<ArithmaticExceptionDto>(dto, HttpStatus.BAD_REQUEST);
     }
 
@@ -26,13 +26,15 @@ public class ExceptionHandlerAdvice {
         InvalidIdExceptionDto dto = new InvalidIdExceptionDto();
         dto.setMessage("Invalid id");
         dto.setDetail(e.getMessage());
+        dto.setId(e.getId());
         return new ResponseEntity<InvalidIdExceptionDto>(dto, HttpStatus.BAD_REQUEST);
     }
 
-//    @ExceptionHandler(ArrayIndexOutOfBoundsException.class)
-//    public ResponseEntity<ArrayIndexOutOfBoundExceptionDto> handleArrayIndexOutOfBoundsException() {
-//        ArrayIndexOutOfBoundExceptionDto dto = new ArrayIndexOutOfBoundExceptionDto();
-//        dto.setMessage("ArrayIndexOutOfBoundsException");
-//        return new ResponseEntity<ArrayIndexOutOfBoundExceptionDto>(dto, HttpStatus.BAD_REQUEST);
-//    }
+    @ExceptionHandler(NullPointerException.class)
+    public ResponseEntity<ArrayIndexOutOfBoundExceptionDto> handleArrayIndexOutOfBoundsException() {
+        ArrayIndexOutOfBoundExceptionDto dto = new ArrayIndexOutOfBoundExceptionDto();
+        dto.setMessage("null pointer exception");
+        dto.setDetail("null pointer exception detail");
+        return new ResponseEntity<ArrayIndexOutOfBoundExceptionDto>(dto, HttpStatus.BAD_REQUEST);
+    }
 }

@@ -20,7 +20,7 @@ public class ProductController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Product> getProductById(@PathVariable("id") int id) throws InvalidIdException {
+    public ResponseEntity<Product> getProductById(@PathVariable("id") int id) throws InvalidIdException,NullPointerException {
         Product product = productService.getProductById(id);
 
         return new ResponseEntity<>(product, HttpStatusCode.valueOf(200));
@@ -34,7 +34,7 @@ public class ProductController {
 
     @PostMapping("/")
     public Product createProduct(@RequestBody Product product) {
-        return null;
+        return productService.createProduct(product);
     }
 
     @PatchMapping("/{id}")

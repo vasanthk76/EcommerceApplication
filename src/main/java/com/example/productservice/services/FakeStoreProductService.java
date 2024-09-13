@@ -30,7 +30,7 @@ public class FakeStoreProductService implements ProductService {
         FakeProductDto fakeProductDto = restTemplate.getForObject("https://fakestoreapi.com/products/"+id, FakeProductDto.class);
         System.out.println(fakeProductDto);
         if(fakeProductDto == null) {
-            throw new InvalidIdException("ID given: "+id);
+            throw new InvalidIdException(id,"ID given: "+id);
         }
         return converToProduct(fakeProductDto);
     }
