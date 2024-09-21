@@ -3,7 +3,6 @@ package com.example.productservice.controllers;
 import com.example.productservice.exceptions.InvalidIdException;
 import com.example.productservice.models.Product;
 import com.example.productservice.services.ProductService;
-import org.apache.coyote.Response;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

@@ -15,6 +15,7 @@ import java.util.List;
 public class SelfProductService implements ProductService {
     private ProductRepository productRepository;
     private CategoryRepository categoryRepository;
+
     public SelfProductService(ProductRepository productRepository,CategoryRepository categoryRepository) {
         this.productRepository=productRepository;
         this.categoryRepository=categoryRepository;
@@ -27,23 +28,26 @@ public class SelfProductService implements ProductService {
 
     @Override
     public List<Product> getAllProducts() {
-        return List.of();
+        return productRepository.findAll();
     }
 
     @Override
     public Product createProduct(Product product) {
-        System.out.println("product here"+product);
+        // System.out.println("product here"+product);
         Category category = product.getCategory();
-        if(category.getId()==null) {
-            Category savedCategory = categoryRepository.save(category);
-            product.setCategory(savedCategory);
+        Category existingCategory = categoryRepository.findByTitle(category.getTitle()).orElse(null);
+        if(existingCategory==null) {
+            product.setCategory(categoryRepository.save(category));
+        }else {
+            product.setCategory(existingCategory);
         }
         return productRepository.save(product);
     }
 
+
     @Override
     public Product updateProduct(Product product) {
-        return null;
+        return null;    
     }
 
     @Override
