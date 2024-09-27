@@ -1,5 +1,6 @@
 package com.example.productservice.models;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToOne;
 import lombok.Getter;
@@ -10,9 +11,10 @@ import lombok.Setter;
 @Entity
 public class Product extends BaseModelClass{
     private String title;
-    private double price;
+    private Double price;
     private String description;
-    @ManyToOne
+    @ManyToOne(cascade=CascadeType.MERGE)
     private Category category;
     private String image;
+//    private int quantity;
 }

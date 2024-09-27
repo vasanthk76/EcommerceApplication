@@ -1,15 +1,11 @@
 package com.example.productservice.services;
 
 import com.example.productservice.dtos.FakeProductDto;
-import com.example.productservice.dtos.InvalidIdExceptionDto;
 import com.example.productservice.exceptions.InvalidIdException;
 import com.example.productservice.models.Category;
 import com.example.productservice.models.Product;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.client.HttpMessageConverterExtractor;
 import org.springframework.web.client.RequestCallback;
 import org.springframework.web.client.RestTemplate;
@@ -54,25 +50,21 @@ public class FakeStoreProductService implements ProductService {
     }
 
     @Override
-    public Product updateProduct(Product product) {
+    public Product updateProduct(Long id,Product product) {
         return null;
     }
 
-    @Override
-    public Product replaceProduct(Product product) {
-        return null;
-    }
 
     @Override
-    public Product replaceProduct(long id, Product product) {
+    public Product replaceProduct(Long id, Product product) {
         RequestCallback requestCallback = restTemplate.httpEntityCallback(product, FakeProductDto.class);
-        HttpMessageConverterExtractor<FakeProductDto> responseExtractor = new HttpMessageConverterExtractor(FakeProductDto.class, restTemplate.getMessageConverters());
+        HttpMessageConverterExtractor<FakeProductDto> responseExtractor = new HttpMessageConverterExtractor<>(FakeProductDto.class, restTemplate.getMessageConverters());
         FakeProductDto fakeProductDto = restTemplate.execute("https://fakestoreapi.com/products/"+id, HttpMethod.PUT, requestCallback, responseExtractor);
         return converToProduct(fakeProductDto);
     }
 
     @Override
-    public void deleteProduct(long id) {
+    public void deleteProduct(Long id) {
 
     }
 

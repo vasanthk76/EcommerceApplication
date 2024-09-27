@@ -34,34 +34,33 @@ public class SelfProductService implements ProductService {
     @Override
     public Product createProduct(Product product) {
         // System.out.println("product here"+product);
-        Category category = product.getCategory();
-        Category existingCategory = categoryRepository.findByTitle(category.getTitle()).orElse(null);
-        if(existingCategory==null) {
-            product.setCategory(categoryRepository.save(category));
-        }else {
-            product.setCategory(existingCategory);
-        }
+        // Category category = product.getCategory();
+        // Category existingCategory = categoryRepository.findByTitle(category.getTitle()).orElse(null);
+        // if(existingCategory==null) {
+        //     product.setCategory(categoryRepository.save(category));
+        // }else {
+        //     product.setCategory(existingCategory);
+        // }
         return productRepository.save(product);
     }
 
 
     @Override
-    public Product updateProduct(Product product) {
-        return null;    
-    }
+    public Product updateProduct(Long id,Product product) throws InvalidIdException{
+        Product existingProduct = productRepository.findById(id).orElseThrow(()->new InvalidIdException(id,"invalid product id "+id));
 
-    @Override
-    public Product replaceProduct(Product product) {
         return null;
     }
 
+
     @Override
-    public Product replaceProduct(long id, Product product) {
+    public Product replaceProduct(Long id,Product product) {
         return null;
     }
 
+
     @Override
-    public void deleteProduct(long id) {
+    public void deleteProduct(Long id) {
 
     }
 }

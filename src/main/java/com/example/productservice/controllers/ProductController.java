@@ -23,7 +23,6 @@ public class ProductController {
         Product product = productService.getProductById(id);
 
         return new ResponseEntity<>(product, HttpStatusCode.valueOf(200));
-//        return new Product();
     }
 
     @GetMapping("/")
@@ -37,8 +36,9 @@ public class ProductController {
     }
 
     @PatchMapping("/{id}")
-    public Product updateProduct(@PathVariable("id") Long id, @RequestBody Product product) {
-        return null;
+    public ResponseEntity<Product> updateProduct(@PathVariable("id") Long id, @RequestBody Product product) throws InvalidIdException{
+        Product updatedProduct = productService.updateProduct(id,product);
+        return new ResponseEntity<>(updatedProduct, HttpStatusCode.valueOf(200));
     }
 
     @PutMapping
