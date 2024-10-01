@@ -3,6 +3,8 @@ package com.example.productservice.controllers;
 import com.example.productservice.exceptions.InvalidIdException;
 import com.example.productservice.models.Product;
 import com.example.productservice.services.ProductService;
+import com.example.productservice.services.SelfProductService;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,7 +16,7 @@ import java.util.List;
 public class ProductController {
     private ProductService productService;
 
-    ProductController(ProductService productService) {
+    ProductController(@Qualifier("selfProductService") ProductService productService) {
         this.productService = productService;
     }
 
