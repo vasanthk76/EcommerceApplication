@@ -34,13 +34,13 @@ public class SelfProductService implements ProductService {
     @Override
     public Product createProduct(Product product) {
         // System.out.println("product here"+product);
-        // Category category = product.getCategory();
-        // Category existingCategory = categoryRepository.findByTitle(category.getTitle()).orElse(null);
-        // if(existingCategory==null) {
-        //     product.setCategory(categoryRepository.save(category));
-        // }else {
-        //     product.setCategory(existingCategory);
-        // }
+         Category category = product.getCategory();
+         Category existingCategory = categoryRepository.findByTitle(category.getTitle()).orElse(null);
+         if(existingCategory==null) {
+             product.setCategory(categoryRepository.save(category));
+         }else {
+             product.setCategory(existingCategory);
+         }
         return productRepository.save(product);
     }
 

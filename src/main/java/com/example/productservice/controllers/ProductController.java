@@ -1,35 +1,52 @@
 package com.example.productservice.controllers;
 
+import com.example.productservice.commons.AuthenticationCommons;
+import com.example.productservice.dtos.UserDto;
 import com.example.productservice.exceptions.InvalidIdException;
 import com.example.productservice.models.Product;
 import com.example.productservice.services.ProductService;
 import com.example.productservice.services.SelfProductService;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/products")
 public class ProductController {
     private ProductService productService;
+    private AuthenticationCommons authenticationCommons;
 
-    ProductController(@Qualifier("selfProductService") ProductService productService) {
+    ProductController(@Qualifier("selfProductService") ProductService productService, AuthenticationCommons authenticationCommons) {
         this.productService = productService;
+        this.authenticationCommons = authenticationCommons;
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/id/{id}")
     public ResponseEntity<Product> getProductById(@PathVariable("id") int id) throws InvalidIdException,NullPointerException {
         Product product = productService.getProductById(id);
 
         return new ResponseEntity<>(product, HttpStatusCode.valueOf(200));
     }
 
-    @GetMapping("/")
-    public List<Product> getAllProducts() {
-        return productService.getAllProducts();
+    @GetMapping("/{token}")
+    public ResponseEntity<List<Product>> getAllProducts(@PathVariable String token) {
+        UserDto userDto = authenticationCommons.validateToken(token);
+
+        if(userDto==null){
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
+
+        if(userDto.getRoles().stream().anyMatch(role -> role.getRoleName().equals("ADMIN"))){
+            return new ResponseEntity<>(productService.getAllProducts(), HttpStatus.OK);
+        }else{
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
     }
 
     @PostMapping("/")
