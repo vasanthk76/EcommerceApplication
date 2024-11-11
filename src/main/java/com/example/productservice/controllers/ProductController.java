@@ -7,6 +7,7 @@ import com.example.productservice.models.Product;
 import com.example.productservice.services.ProductService;
 import com.example.productservice.services.SelfProductService;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
@@ -33,20 +34,26 @@ public class ProductController {
 
         return new ResponseEntity<>(product, HttpStatusCode.valueOf(200));
     }
+//
+//    @GetMapping("/{token}")
+//    public ResponseEntity<List<Product>> getAllProducts(@PathVariable String token) {
+//        UserDto userDto = authenticationCommons.validateToken(token);
+//
+//        if(userDto==null){
+//            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+//        }
+//
+//        if(userDto.getRoles().stream().anyMatch(role -> role.getRoleName().equals("ADMIN"))){
+//            return new ResponseEntity<>(productService.getAllProducts(), HttpStatus.OK);
+//        }else{
+//            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+//        }
+//    }
 
-    @GetMapping("/{token}")
-    public ResponseEntity<List<Product>> getAllProducts(@PathVariable String token) {
-        UserDto userDto = authenticationCommons.validateToken(token);
 
-        if(userDto==null){
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-        }
-
-        if(userDto.getRoles().stream().anyMatch(role -> role.getRoleName().equals("ADMIN"))){
-            return new ResponseEntity<>(productService.getAllProducts(), HttpStatus.OK);
-        }else{
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-        }
+    @GetMapping("/")
+    public ResponseEntity<Page<Product>> getAllProducts(@RequestParam("pageNumber") int pageNumber, @RequestParam("pageSize") int pageSize) {
+            return new ResponseEntity<>(productService.getAllProducts(pageNumber,pageSize), HttpStatus.OK);
     }
 
     @PostMapping("/")
