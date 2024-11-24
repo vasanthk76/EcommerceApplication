@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,15 +23,19 @@ import java.util.Optional;
 public class ProductController {
     private ProductService productService;
     private AuthenticationCommons authenticationCommons;
+    private RestTemplate restTemplate;
 
-    ProductController(@Qualifier("selfProductService") ProductService productService, AuthenticationCommons authenticationCommons) {
+    ProductController(ProductService productService, AuthenticationCommons authenticationCommons, RestTemplate restTemplate) {
         this.productService = productService;
         this.authenticationCommons = authenticationCommons;
+        this.restTemplate = restTemplate;
     }
 
     @GetMapping("/id/{id}")
     public ResponseEntity<Product> getProductById(@PathVariable("id") int id) throws InvalidIdException,NullPointerException {
         Product product = productService.getProductById(id);
+
+        ResponseEntity<String> response = restTemplate.getForEntity("http://userservice/users/10", String.class);
 
         return new ResponseEntity<>(product, HttpStatusCode.valueOf(200));
     }

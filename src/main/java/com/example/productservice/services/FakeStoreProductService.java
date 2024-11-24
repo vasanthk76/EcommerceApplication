@@ -1,11 +1,13 @@
 package com.example.productservice.services;
 
+import com.example.productservice.configs.RedisTemplateConfig;
 import com.example.productservice.dtos.FakeProductDto;
 import com.example.productservice.exceptions.InvalidIdException;
 import com.example.productservice.models.Category;
 import com.example.productservice.models.Product;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpMessageConverterExtractor;
@@ -18,19 +20,33 @@ import java.util.List;
 @Service
 public class FakeStoreProductService implements ProductService {
     RestTemplate restTemplate;
-    public FakeStoreProductService(RestTemplate restTemplate) {
+    RedisTemplate redisTemplate;
+    public FakeStoreProductService(RestTemplate restTemplate, RedisTemplate redisTemplate) {
         this.restTemplate = restTemplate;
+        this.redisTemplate = redisTemplate;
     }
 
     @Override
     public Product getProductById(long id) throws InvalidIdException{
+        FakeProductDto fakeProductDto;
 
-        FakeProductDto fakeProductDto = restTemplate.getForObject("https://fakestoreapi.com/products/"+id, FakeProductDto.class);
-        System.out.println(fakeProductDto);
+        Product product = (Product) redisTemplate.opsForHash().get("PRODUCTS","PRODUCT_"+id);
+
+        if(product != null){
+            return product;
+        }
+
+        fakeProductDto = restTemplate.getForObject("https://fakestoreapi.com/products/"+id, FakeProductDto.class);
+//        System.out.println(fakeProductDto);
         if(fakeProductDto == null) {
             throw new InvalidIdException(id,"ID given: "+id);
         }
-        return converToProduct(fakeProductDto);
+
+        product = converToProduct(fakeProductDto);
+
+        redisTemplate.opsForHash().put("PRODUCTS","PRODUCT_"+id,product);
+
+        return product;
     }
 
     @Override
