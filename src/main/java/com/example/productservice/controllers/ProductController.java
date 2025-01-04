@@ -35,7 +35,7 @@ public class ProductController {
     public ResponseEntity<Product> getProductById(@PathVariable("id") int id) throws InvalidIdException,NullPointerException {
         Product product = productService.getProductById(id);
 
-        ResponseEntity<String> response = restTemplate.getForEntity("http://userservice/users/10", String.class);
+//        ResponseEntity<String> response = restTemplate.getForEntity("http://userservice/users/10", String.class);
 
         return new ResponseEntity<>(product, HttpStatusCode.valueOf(200));
     }
